@@ -1,12 +1,15 @@
 """
-Measuring time with Python3 monotonic timers (a clock with the highest level
-of resolution)
+Profiling by measuring time
 
-Inludes time elapsed during sleep and system-wide.
+- Using Python3 monotonic timers, perf_counter, (a clock with the highest level
+of resolution, inludes time elapsed during sleep and system-wide)
+- Using timeit, which runs multiple iterations and averages the result
+
 """
 
 import math
 from time import perf_counter
+from timeit import timeit
 
 
 def square_sums_basic(number):
@@ -23,13 +26,12 @@ def square_sums_fn(number):
     """ Using builtins """
     return sum(map(math.sqrt, range(1, number)))
 
-
 if __name__ == '__main__':
     start = perf_counter()
     sum1 = square_sums_basic(1000000)
     duration = perf_counter() - start  # Seconds
 
-    print("Duration: {}".format(duration))
+    print("square_sums_basic using perf_counter: {}".format(duration))
 
     start = perf_counter()
     sum2 = square_sums_fn(1000000)
@@ -37,4 +39,9 @@ if __name__ == '__main__':
 
     assert sum1 == sum2
 
-    print("Duration: {}".format(duration))
+    print("square_sums_fn using perf_counter: {}".format(duration))
+
+    print('square_sums_basic using timeit', timeit('square_sums_basic(10)', 'from __main__ import \
+                                      square_sums_basic'))
+    print('square_sums_fn using timeit', timeit('square_sums_fn(10)', 'from __main__ import \
+                                   square_sums_fn'))
